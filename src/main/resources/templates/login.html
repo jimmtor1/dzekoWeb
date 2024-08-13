@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" style="margin: 0; padding: 0">
+    <head>
+        <title>Login</title>
+        <link href="/css/login.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="login-container">            
+            <img src="/img/dzekologo.png" alt="alt" />
+            <form action="/login" method="post">
+                <label for="username">Korisničko ime</label>
+                <input type="text" id="username" name="username" placeholder="Unesite svoje korisničko ime">
+
+                <label for="password">Šifra</label>
+                <input type="password" id="password" name="password" placeholder="Unesite svoju šifra">
+
+                <p class="error-message" th:if="${error}" th:text="'Nevažeće korisničko ime ili šifra'"></p>
+
+                <button type="submit">Prijava</button>
+            </form>
+        </div>
+    </body>
+</html>
+

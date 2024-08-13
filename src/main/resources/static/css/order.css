@@ -1,0 +1,241 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #0081C9;
+    margin: 0
+}
+
+#buttons-div{
+    display: flex;
+    gap: 10px
+}
+
+.form-container {
+    /*background-color: #0081C9;*/
+    padding: 10px;
+    /*    border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        margin: 20px;*/
+    box-sizing: border-box;
+}
+
+
+.form-container h2 {
+    margin-top: 28px;
+    margin-bottom: 30px;
+    text-align: center;
+    color: white;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    z-index: 999;
+}
+
+.popup-content {
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    position: relative;
+    text-align: center;
+}
+
+.popup-content .close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.popup.success {
+    background-color: #4CAF50; /* Verde para éxito */
+    color: white;
+}
+
+.popup.error {
+    background-color: #f44336; /* Rojo para error */
+    color: white;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+td {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:first-child {
+    background-color: lightgray; /* Cambia este color por el que desees */
+}
+
+.table-container{
+    box-sizing: border-box;
+    width: 100%;
+    margin: 10px auto;
+    background-color: #f2f2f2;
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.save-button-container{
+    width: 40%;
+    margin: 10px auto;
+    display: flex;
+}
+
+.table-container h2{
+    margin-top: 8px;
+    margin-bottom: 30px;
+    color : black;
+    text-align: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #4CAF50;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.btn:active {
+    background-color: #0056b3;
+    transform: translateY(1px);
+}
+
+
+td img{
+    max-width: 20px
+}
+
+td a, td button{
+    max-width: 30px;
+    padding: 4px;
+    background-color: lightgrey;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 4px;
+    cursor: pointer;
+    border: solid black thin;
+    display: flex;
+
+}
+
+td a :hover {
+    background-color: #0056b3;
+}
+
+td button :hover {
+    background-color: #0056b3;
+}
+
+.searchbar {
+    display: flex;
+    width: 100%;
+    gap: 6px;
+}
+
+.searchbar .btn {
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    background-color: #5cb85c;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 4px;
+}
+
+.searchbar .btn:hover {
+    background-color: #5cb85c;
+}
+
+.searchbar .btn-img img {
+    width: 20px;
+    height: 20px;
+}
+
+.searchbar input[type="text"] {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 50%;
+}
+
+
+.searchbar .btn:hover {
+    background-color: #4cae4c;
+}
+
+
+/*@media (max-width: 600px) {
+    body {
+        background-color: #0081C9;
+    }
+
+    .form-container {
+        margin: 10px auto;
+        box-shadow: none;
+        width: 100%;
+    }
+
+    .table-container{
+        box-sizing: border-box;
+        overflow-x: auto;  Añadir scroll vertical si el contenido excede la altura
+        max-height: calc(100vh - 40px);  Limitar la altura del formulario 
+        width: 100%;
+        background-color: #0081C9;
+    }
+
+    .form-group input {
+        padding: 8px;
+    }
+
+    button {
+        padding: 8px;
+    }
+
+    .table-container h2{
+        color : white;
+    }
+
+
+}*/

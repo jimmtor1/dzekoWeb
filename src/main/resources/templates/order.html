@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Džeko Comerc</title>        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/order.css}">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/fragments.css}"/>
+    </head>
+    <body onload="hiddePopup()">
+
+        <div th:insert="~{fragments :: header}"></div>
+
+        <div class="form-container">
+
+            <h2>Džeko Comerc</h2>
+
+            <a th:href="@{/order/form}" class="btn">Nova narudžba</a>
+            <a th:href="@{/archived}" class="btn">Arhiva </a>
+
+            <div class="table-container">
+
+                <table id="itemTable">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Kupac</th>
+                            <th>Kontakt</th>
+                            <th>Adresa</th>
+                            <th>Dodao</th>
+                            <th th:if="${role=='2'}" >Odobri</th>
+                            <th>Detalji</th>
+                            <th th:if="${role!='2'}">Mjere</th>
+                            <th th:if="${role=='2'}">Arhiviraj</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr th:each="order : ${orders}">
+                            <td th:text="${order.idorder}">1</td>
+                            <td>
+                                <label th:text="${order.customer}">text</label>
+                                <img th:if="${order.dimensions}" th:src="@{/img/approve.png}"/>
+                            </td>
+                            <td th:text="${order.telephone}">100</td>
+                            <td th:text="${order.address}">100</td>
+                            <td th:text="${order.creator_user}"></td>
+                            <td th:if="${role=='2'}">
+                                <form action="#" th:action="@{/order/approve}" method="POST">
+                                    <input type="hidden" id="idorder" th:name="idorder" th:value="${order.idorder}">
+                                    <button type="submit" th:attr='disabled=${order.approve==true}'>
+                                        <img th:if='${order.approve==true}' th:src="@{/img/approve.png}" alt="alt"/>
+                                        <img th:if='${order.approve==false}' th:src="@{/img/circle.png}" alt="alt"/>
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
+                                <form action="#" th:action="@{/order/edit}" method="POST">                                        
+                                    <input type="hidden" id="idorder" th:name="idorder" th:value="${order.idorder}">
+                                    <button type="submit">
+                                        <img th:src="@{/img/edit.png}" alt="alt"/>
+                                    </button>
+                                </form>
+                            </td>
+                            <td th:if="${role!='2'}">
+                                <a th:href="@{/dimensions/}+${order.idorder}">
+                                    <img th:src="@{/img/dimension.png}" alt="alt"/>  
+                                </a>
+                            </td>
+                            <td th:if="${role=='2'}">
+                                <button th:onclick="'showAlert('+${order.idorder}+')'">
+                                    <img th:src="@{/img/archive.png}" alt="alt"/>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div> 
+
+            <!-- Popup -->       
+            <div th:if="${success_message}" id="popup" class="popup success">
+                <div id="popup-content" class="popup-content">
+                    <span id="popup-message" th:text="${success_message}"></span>
+                    <span class="close" onclick="closePopup()">&times;</span>
+                </div>
+            </div>
+
+            <div th:if="${error_message}" id="popup" class="popup error">
+                <div id="popup-content" class="popup-content">
+                    <span id="popup-message" th:text="${error_message}"></span>
+                    <span class="close" onclick="closePopup()">&times;</span>
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+
+            function closePopup() {
+                var popup = document.getElementById('popup');
+                popup.style.display = 'none';
+            }
+
+            function hiddePopup() {
+                var popup = document.getElementById("popup");
+                if (popup) {
+                    setTimeout(function () {
+                        closePopup();
+                    }, 2000); // Oculta el popup después de 3 segundos
+                }
+            }
+
+            function setupDivWithEditCancelButtons(rowIndex) {
+
+                var div = document.getElementById("buttons-div");
+                div.innerHTML = '';
+                var editButton = document.createElement('button');
+                editButton.textContent = 'Edit';
+                editButton.addEventListener('click', function () {
+                    // Acción del botón Edit
+                    var table = document.getElementById("itemTable");
+                    var row = table.rows[rowIndex];
+                    loadDataInRow(row, rowIndex);
+                    setupDivWithAddButton();
+                });
+                var cancelButton = document.createElement('button');
+                cancelButton.textContent = 'Cancel';
+                cancelButton.addEventListener('click', function () {
+                    // Acción del botón Cancel
+                    setupDivWithAddButton();
+                });
+                div.appendChild(editButton);
+                div.appendChild(cancelButton);
+            }
+
+            function setupDivWithAddButton() {
+                var div = document.getElementById("buttons-div");
+                div.innerHTML = '';
+                var addButton = document.createElement('button');
+                addButton.textContent = 'Dodaj';
+                addButton.type = "submit";
+                div.appendChild(addButton);
+                cleanDimensionFields();
+            }
+
+            function searchClient() {
+                document.getElementById("inputcustomer-div").hidden = true;
+                document.getElementById("select-div").hidden = false;
+                document.getElementById("buttonSearch").hidden = true;
+                document.getElementById("buttonAdd").hidden = false;
+                document.getElementById("buttonsaveorder").hidden = true;
+
+            }
+
+            function addClient() {
+                document.getElementById("inputcustomer-div").hidden = false;
+                document.getElementById("select-div").hidden = true;
+                document.getElementById("buttonSearch").hidden = false;
+                document.getElementById("buttonAdd").hidden = true;
+                document.getElementById("buttonsaveorder").hidden = false;
+                document.getElementById("text").disabled = false;
+            }
+            //
+            function cleanDimensionFields() {
+                // Limpiar los campos del formulario
+                document.getElementById("width").value = '';
+                document.getElementById("height").value = '';
+                document.getElementById("opening").value = '';
+                document.getElementById("quantity").value = '';
+                document.getElementById("depth").value = '';
+                document.getElementById("wingShorter").value = '';
+                document.getElementById("wingLonger").value = '';
+                document.getElementById("note").value = '';
+                document.getElementById("bigNote").value = '';
+            }
+
+
+
+            function selectCustomer(selectElement) {
+
+                var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+                document.getElementById("idorder").value = selectElement.value;
+                document.getElementById("text").value = selectedOption.getAttribute('data-texto');
+                document.getElementById("text").disabled = true;
+            }
+
+            function showAlert(orderid) {
+                if (confirm('Jeste li sigurni?')) {
+                    window.location.href = '/order/archive/' + orderid;
+                }
+
+            }
+
+        </script>
+
+    </body>
+</html>

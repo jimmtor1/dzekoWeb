@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Džeko Comerc</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/css/dimensions.css">
+        <link rel="stylesheet" type="text/css" href="/css/fragments.css">
+    </head>
+    <body onload="hiddePopup()">
+
+        <div th:insert="~{fragments :: header}"></div>
+
+        <div class="form-container">
+
+            <h2>Dodavanje mjera</h2>  
+
+            <a th:href="@{/order}" class="btn btn-img">
+                <img th:src="@{/img/arrow-back.png}" alt="back image"/>
+            </a> 
+
+            <p th:utext="${text}"></p>
+
+            <!--save form-->
+            <div th:unless="${dimensions}">
+
+                <div class="form-group">
+                    <label for="širina">Širina</label>
+                    <input type="number" step=0.01 id="width" name="width" placeholder="širina">
+                </div>
+                <div class="form-group">
+                    <label for="height">Visina</label>
+                    <input type="number" step=0.01 id="height" name="height" placeholder="visina">
+                </div>
+                <div class="form-group">
+                    <label for="opening">Otvaranje</label>
+                    <input type="text" id="opening" name="opening" placeholder="otvaranje" >
+                </div>
+                <div class="form-group">
+                    <label for="depth">Dubina</label>
+                    <input type="number" step=0.01 id="depth" name="depth" placeholder="dubina" >
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Količina</label>
+                    <input type="number" id="quantity" name="quantity" placeholder="količina" value=1>
+                </div>
+                <div class="form-group">
+                    <label for="wingShorter">Krilo kraće</label>
+                    <input type="text" id="wingShorter" name="wingShorter" placeholder="krilo kraće" >
+                </div>
+                <div class="form-group">
+                    <label for="wingLonger">Krilo duže</label>
+                    <input type="text" id="wingLonger" name="wingLonger" placeholder="krilo duže" >
+                </div>
+                <div class="form-group">
+                    <label for="Bilješka">Napomena</label>
+                    <input type="text" id="note" name="note" placeholder="Napomena" >
+                </div>
+                <div class="form-group">
+                    <label for="bigNote">Napomena monteru</label>
+                    <input type="text" id="bigNote" name="bigNote" placeholder="Napomena monteru" >
+                </div>
+
+                <div id="buttons-div">
+                    <button th:unless="${dimensions}" onclick="addItem()">Dodaj</button>
+                </div>
+
+            </div>
+
+
+            <!--edit form-->
+            <form th:if="${dimensions}" action="#" th:object="${dimension}" th:action="@{/dimensions/edit}" th:method="post" >
+
+                <input th:if="${dimensions}" type="hidden" id="idorderform" name="orderid" th:value="${idorder}">
+                <input th:if="${dimensions}" type="hidden" th:field="*{iddimension}">
+                <div class="form-group">
+                    <label for="širina">Širina</label>
+                    <input type="number" step=0.01 placeholder="širina" id="width" name="width">
+                </div>
+                <div class="form-group">
+                    <label for="height">Visina</label>
+                    <input type="number" step=0.01  placeholder="visina" id="height" name="height">
+                </div>
+                <div class="form-group">
+                    <label for="opening">Otvaranje</label>
+                    <input type="text" id="opening" name="opening" placeholder="otvaranje" th:value="${opening}">
+                </div>
+                <div class="form-group">
+                    <label for="depth">Dubina</label>
+                    <input type="number" step=0.01 id="depth" name="depth" placeholder="dubina" th:value="${depth}">
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Količina</label>
+                    <input type="number" th:field="*{quantity}" placeholder="količina">
+                </div>
+                <div class="form-group">
+                    <label for="wingShorter">Krilo kraće</label>
+                    <input type="text" id="wingShorter" name="wingShorter" placeholder="krilo kraće" th:value="${wingShorter}">
+                </div>
+                <div class="form-group">
+                    <label for="wingLonger">Krilo duže</label>
+                    <input type="text" id="wingLonger" name="wingLonger" placeholder="krilo duže" th:value="${wingLonger}">
+                </div>
+                <div class="form-group">
+                    <label for="Bilješka">Napomena</label>
+                    <input type="text" id="note" name="note" placeholder="Napomena" th:value="${note}">
+                </div>
+                <div class="form-group">
+                    <label for="bigNote">Napomena monteru</label>
+                    <input type="text" id="bigNote" name="bigNote" placeholder="Napomena monteru" th:value="${bigNote}">
+                </div>
+
+                <div id="buttons-div">
+                    <button th:if="${dimensions}" type="submit" >Spremi</button>
+                    <a th:if="${dimensions}" th:href="@{/order}">Odustani</a>                   
+                </div>
+
+            </form>
+
+
+
+            <!--table section_______________________________________________-->
+
+            <form action="#" th:action="@{/dimensions}" th:method="post" >
+
+                <div class="table-container">
+
+                    <table id="itemTable">
+                        <thead>
+                            <tr>
+                                <th>Širina</th>
+                                <th>Visina</th>
+                                <th>Otvaranje</th>
+                                <th>Dubina</th>
+                                <th>Količina</th>
+                                <th>Krilo kraće</th>
+                                <th>Krilo duže</th>
+                                <th>Napomena</th>
+                                <th>Napomena monteru</th>
+                                <th>Izbriši</th>
+                                <th hidden="true" >iddimension</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr th:each="dim, rowStat : ${dimensions}" 
+                                th:onclick="'cargeDataToEdit(' + ${rowStat.index+1} + ')'">
+                                <td th:text="${dim.width}"></td>
+                                <td th:text="${dim.height}"></td>
+                                <td th:text="${dim.opening}"></td>
+                                <td th:text="${dim.depth}"></td>
+                                <td th:text="${dim.quantity}"></td>
+                                <td th:text="${dim.wingShorter}"></td>
+                                <td th:text="${dim.wingLonger}"></td>
+                                <td th:text="${dim.note}"></td>
+                                <td th:text="${dim.bigNote}"></td>
+                                <td>
+
+                                    <button type='button' th:onclick="'showAlert('+${dim.iddimension}+')'" style="max-width: 16px; margin: 0px; padding: 0px; background-color: transparent">
+                                        <img style="max-width: 16px; margin: 0px; padding: 0px" th:src="@{/img/trash-can.png}" alt="alt"/>
+                                    </button>
+
+
+
+                                </td>
+                                <td hidden="true" th:text="${dim.iddimension}"></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div> 
+
+                <div id="custormer-div">
+                    <input type="hidden" id="idorder" name="idorder" th:value="${idorder}">
+                </div> 
+
+                <div th:unless="${dimensions}" class="save-button-container" >
+                    <button type="submit">Spremi</button>
+                </div>
+
+            </form>
+
+        </div>
+
+
+    </div>
+
+    <!-- Popup -->       
+    <div th:if="${success_message}" id="popup" class="popup success">
+        <div id="popup-content" class="popup-content">
+            <span id="popup-message" th:text="${success_message}"></span>
+            <span class="close" onclick="closePopup()">&times;</span>
+        </div>
+    </div>
+
+    <div th:if="${error_message}" id="popup" class="popup error">
+        <div id="popup-content" class="popup-content">
+            <span id="popup-message" th:text="${error_message}"></span>
+            <span class="close" onclick="closePopup()">&times;</span>
+        </div>
+    </div>
+
+    <script>
+
+        function closePopup() {
+            var popup = document.getElementById('popup');
+            popup.style.display = 'none';
+        }
+
+        function hiddePopup() {
+            var popup = document.getElementById("popup");
+            if (popup) {
+                setTimeout(function () {
+                    closePopup();
+                }, 2000); // Oculta el popup después de 3 segundos
+            }
+        }
+
+        function addItem() {
+
+            var idorder = document.getElementById("idorder").value;
+            if (!idorder) {
+                return;
+            }
+
+            // Crear una nueva fila y celdas
+            var table = document.getElementById("itemTable").getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow();
+            var rowIndex = newRow.rowIndex;
+            newRow.addEventListener('click', function () {
+                cargeDataToEdit(rowIndex);
+            });
+
+            loadDataInRow(newRow, rowIndex);
+            cleanDimensionFields();
+
+        }
+
+        function cargeDataToEdit(rowIndex) {
+            var table = document.getElementById("itemTable");
+            var row = table.rows[rowIndex];
+            document.getElementById("width").value = row.cells[0].textContent;
+            document.getElementById("height").value = row.cells[1].textContent;
+            document.getElementById("opening").value = row.cells[2].textContent;
+            document.getElementById("depth").value = row.cells[3].textContent;
+            document.getElementById("quantity").value = row.cells[4].textContent;
+            document.getElementById("wingShorter").value = row.cells[5].textContent;
+            document.getElementById("wingLonger").value = row.cells[6].textContent;
+            document.getElementById("note").value = row.cells[7].textContent;
+            document.getElementById("bigNote").value = row.cells[8].textContent;
+
+            if (!document.getElementById("iddimension")) {
+                setupDivWithEditCancelButtons(rowIndex);
+            } else {
+                document.getElementById("iddimension").value = row.cells[10].textContent;
+            }
+
+
+        }
+
+        function setupDivWithEditCancelButtons(rowIndex) {
+
+            var div = document.getElementById("buttons-div");
+            div.innerHTML = '';
+            var editButton = document.createElement('button');
+            editButton.textContent = 'Izmijeni';
+            editButton.addEventListener('click', function () {
+                // Acción del botón Edit
+                var table = document.getElementById("itemTable");
+                var row = table.rows[rowIndex];
+                loadDataInRow(row, rowIndex);
+                setupDivWithAddButton();
+            });
+            var cancelButton = document.createElement('a');
+            cancelButton.textContent = 'Odustani';
+            cancelButton.addEventListener('click', function () {
+                // Acción del botón Cancel
+                setupDivWithAddButton();
+            });
+            div.appendChild(editButton);
+            div.appendChild(cancelButton);
+        }
+
+        function setupDivWithAddButton() {
+            var div = document.getElementById("buttons-div");
+            div.innerHTML = '';
+            var addButton = document.createElement('button');
+            addButton.textContent = 'Dodaj';
+            addButton.addEventListener('click', function () {
+                // Acción del botón Cancel
+                addItem();
+            });
+            div.appendChild(addButton);
+            cleanDimensionFields();
+        }
+
+
+        function cleanDimensionFields() {
+            // Limpiar los campos del formulario
+            document.getElementById("width").value = '';
+            document.getElementById("height").value = '';
+            document.getElementById("opening").value = '';
+            document.getElementById("quantity").value = '';
+            document.getElementById("depth").value = '';
+            document.getElementById("wingShorter").value = '';
+            document.getElementById("wingLonger").value = '';
+            document.getElementById("note").value = '';
+            document.getElementById("bigNote").value = '';
+            document.getElementById("iddimension").value = '';
+        }
+
+        function loadDataInRow(row, rowIndex) {
+
+            var width = document.getElementById("width").value !== "" ? document.getElementById("width").value : 0;
+            var height = document.getElementById("height").value !== "" ? document.getElementById("height").value : 0;
+            var opening = document.getElementById("opening").value !== "" ? document.getElementById("opening").value : 0;
+            var depth = document.getElementById("depth").value !== "" ? document.getElementById("depth").value : 0;
+            var quantity = document.getElementById("quantity").value !== "" ? document.getElementById("quantity").value : 0;
+            var wingShorter = document.getElementById("wingShorter").value !== "" ? document.getElementById("wingShorter").value : 0;
+            var wingLonger = document.getElementById("wingLonger").value !== "" ? document.getElementById("wingLonger").value : 0;
+            var note = document.getElementById("note").value !== "" ? document.getElementById("note").value : 0;
+            var bigNote = document.getElementById("bigNote").value !== "" ? document.getElementById("bigNote").value : 0;
+            var idorder = document.getElementById("idorder").value !== "" ? document.getElementById("idorder").value : 0;
+
+            row.innerHTML = `               
+            <td>${width}</td>
+            <td>${height}</td>
+            <td>${opening}</td>
+            <td>${depth}</td>
+            <td>${quantity}</td>
+            <td>${wingShorter}</td>
+            <td>${wingLonger}</td>
+            <td>${note}</td>
+            <td>${bigNote}</td>  
+            <td>
+                <button type='button'  onclick="eraseRow(this)" style="margin: 0px; padding: 0px; background-color: transparent">
+                    <img style="max-width: 16px; margin: 0px; padding: 0px" src="/img/trash-can.png" alt="alt"/>
+                </button>
+            </td>              
+            <input type="hidden" name="dimensions[${rowIndex - 1}].width" value="${width}" />
+            <input type="hidden" name="dimensions[${rowIndex - 1}].height" value="${height}" />
+            <input type="hidden" name="dimensions[${rowIndex - 1}].opening" value="${opening}" />
+            <input type="hidden" name="dimensions[${rowIndex - 1}].depth" value="${depth}" />               
+            <input type="hidden" name="dimensions[${rowIndex - 1}].quantity" value="${quantity}" />
+            <input type="hidden" name="dimensions[${rowIndex - 1}].wingShorter" value="${wingShorter}" />
+            <input type="hidden" name="dimensions[${rowIndex - 1}].wingLonger" value="${wingLonger}" />
+            <input type="hidden" name="dimensions[${rowIndex - 1}].note" value="${note}" />
+            <input type="hidden" name="dimensions[${rowIndex - 1}].bigNote" value="${bigNote}" />  
+            <input type="hidden" name="dimensions[${rowIndex - 1}].orderid" value="${idorder}" />  
+            `;
+        }
+
+        function selectCustomer(selectElement) {
+
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+            document.getElementById("idorder").value = selectElement.value;
+            document.getElementById("text").value = selectedOption.getAttribute('data-texto');
+            document.getElementById("text").disabled = true;
+        }
+
+        function showAlert(iddimension) {
+            if (confirm('Jeste li sigurni?')) {
+                window.location.href = '/dimensions/delete/' + iddimension;
+            }
+        }
+
+        function eraseRow(button) {
+            // Obtener la fila padre del botón
+            var row = button.parentNode.parentNode;
+            var table = document.getElementById("itemTable");
+            table.deleteRow(row.rowIndex);
+        }
+
+
+
+    </script>
+
+
+</body>
+</html>

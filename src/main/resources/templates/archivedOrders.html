@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Džeko Comerc</title>        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/order.css}">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/fragments.css}"/>
+    </head>
+    <body onload="hiddePopup()">
+
+        <div th:insert="~{fragments :: header}"></div>
+
+        <div class="form-container">
+
+            <h2>Arhivirani nalozi</h2>
+
+
+            <form class='form' th:action="@{/archived/search}" method="get">
+                <div class='searchbar'>
+
+                    <a th:href="@{/order}" class="btn btn-img">
+                        <img th:src="@{/img/arrow-back.png}" alt="back image"/>
+                    </a> 
+                    <a th:href="@{/order/form}" class="btn">Nova narudžba</a>
+                    <input type="text" name="keyword" placeholder="Unesi ime ovdje">
+                    <button type="submit" class='btn'>Pretraživanje</button>
+
+                </div>
+            </form>
+
+            <div class="table-container">
+
+                <table id="itemTable">
+                    <thead class="table-head">
+                        <tr >
+                            <th>Id</th>
+                            <th>Datum kreiranja</th>
+                            <th>Kupac</th>
+                            <th>Kontakt</th>
+                            <th>Adresa</th> 
+                            <th>Dodao</th>
+                            <th>Vrati</th>                            
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr th:each="order : ${orders}">
+                            <td th:text="${order.idorder}"></td>
+                            <td th:text="${order.date_create}"></td>
+                            <td th:text="${order.customer}"></td>
+                            <td th:text="${order.telephone}"></td>
+                            <td th:text="${order.address}"></td>                        
+                            <td th:text="${order.creator_user}"></td>                        
+                            <td>
+                                <a th:href="@{/archived/}+${order.idorder}">
+                                    <img th:src="@{/img/unarchive.png}" alt="unarchive image"/>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div> 
+
+
+            <!-- Popup -->       
+            <div th:if="${success_message}" id="popup" class="popup success">
+                <div id="popup-content" class="popup-content">
+                    <span id="popup-message" th:text="${success_message}"></span>
+                    <span class="close" onclick="closePopup()">&times;</span>
+                </div>
+            </div>
+
+            <div th:if="${error_message}" id="popup" class="popup error">
+                <div id="popup-content" class="popup-content">
+                    <span id="popup-message" th:text="${error_message}"></span>
+                    <span class="close" onclick="closePopup()">&times;</span>
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            function closePopup() {
+                var popup = document.getElementById('popup');
+                popup.style.display = 'none';
+            }
+
+            function hiddePopup() {
+                var popup = document.getElementById("popup");
+                if (popup) {
+                    setTimeout(function () {
+                        closePopup();
+                    }, 2000); // Oculta el popup después de 3 segundos
+                }
+            }
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,80 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #0081C9;
+    margin: 0;
+}
+
+
+.form-container {
+    /*b ackground-color: #0081C9;*/
+    padding: 30px;
+    /*border-radius: 8px;*/
+    /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+    /*width: 70%;*/
+    /*Reducir la anchura del formulario*/
+    /*margin: 20px auto;*/
+    /*Centrar horizontalmente*/
+    box-sizing: border-box;
+}
+
+.form-container h2 {
+    margin-top: 8px;
+    margin-bottom: 30px;
+    text-align: center;
+    color: white;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color : white;
+}
+
+.form-group input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 16px;
+    
+}
+
+button {
+    width: 100%;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: medium;
+    padding: 10px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+
+.save-button-container{
+    width: 80%;
+    margin: 10px auto;
+    display: flex;
+    gap : 10px
+}
+
+.save-button-container a{
+    width: 100%;
+    padding: 10px;
+    background-color: dimgrey;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 4px;
+    font-weight: bold;
+    border: none;
+}
+
+
